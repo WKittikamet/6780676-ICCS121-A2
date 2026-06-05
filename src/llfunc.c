@@ -2,6 +2,18 @@
 #include <stdlib.h>
 #include "../include/linkedlist.h"
 
+/*
+	Functions list:
+		addlast
+		addfirst
+		add(position)
+		delete(position)
+		clear memory
+		print
+		quit
+*/
+
+
 // Add a node to the circular, dynamic linked list with information at position pos
 void add(Node *list, long value, char *words, int pos, int length){
 	Node *current = *list;
