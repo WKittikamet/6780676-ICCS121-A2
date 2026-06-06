@@ -19,7 +19,8 @@ int main(){
         	printf("Would you like to resume your previous session? (y/n): ");
 		// Read the line of text from input(stdin)
 		if (fgets(conf, sizeof(conf), stdin) != NULL) {
-			// conf[strcspn(conf, "\n")] = '\0';
+			// Replace the newline with a null terminator for the if-conditions
+			conf[strcspn(conf, "\n")] = '\0';
 			if (strcmp(conf, "y") == 0 || strcmp(conf, "n") == 0) {
 				break;
 			}
@@ -67,8 +68,8 @@ int main(){
 	while(1) {
 		printf("\n> ");
 		if (fgets(conf, sizeof(conf), stdin) != NULL) {
-		// Get command -> Interpret and execute designated function -> repeat until 'quit'
 		/*
+			Get command -> Interpret and execute designated function -> repeat until 'quit'
 			Command function guidelines:
 				if command == "add income [amount] [desc]" -> addlast(list, amount, desc)
 									      ++length;
@@ -85,14 +86,14 @@ int main(){
 		}
 	}
 	/*
-		Save all transactions into transaction_log.txt, clear memory and exit the program
+		Save all transactions into ../logs/transaction_log.txt, clear memory and exit the program
 
-		If no transaction_log.txt exists, create a new one.
+		If no transaction_log.txt exists, create a new one in ../logs/.
 		Else if one does exist, then we overwrite it and save our current transactions
 
 		Saving to transaction_log.txt goes as follows:
 			if the status of a node is "--- d", then they will not be saved saved onto transaction_log.txt
-			Otherwise, save each node's amnt and desc into their own lines in transaction_log.txt in the following format:
+			Otherwise, save each node's amnt, desc and status as "(saved)" into their own lines in transaction_log.txt in the following format:
 				[desc]	[amnt]	(saved)
 	*/
 	return 0;

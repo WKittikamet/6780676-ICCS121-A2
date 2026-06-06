@@ -26,6 +26,7 @@ void addlast(Node *list, long value, char *words){
 	}
 	n->amnt = value;
 	n->desc = *words;
+	n->stauts = "(new)";
 	if (*list == NULL && pos = 0){
                 n->head = NULL;
                 n->tail = n->head;
@@ -54,6 +55,7 @@ void add(Node *list, long value, char *words, int pos, int length){
 	}
 	n->amnt = value;
         n->desc = *words;
+	n->status = "+++ i";
 	if (*list == NULL && pos = 0){
 		n->head = NULL;
 		n->tail = n->head;
@@ -86,7 +88,7 @@ void add(Node *list, long value, char *words, int pos, int length){
 
 /*
 	dlt function:
-		Delete node at position pos
+		Mark the node for deletion
 */
 void dlt(Node *list, int pos){
 	Node *current = list;
@@ -105,9 +107,7 @@ void dlt(Node *list, int pos){
                         current = current->tail;
                 }
         }
-	current->head->tail = current->tail;
-	current->tail->head = current->head;
-	free(current);
+	current->status = "--- d";
 	return;
 };
 
@@ -118,7 +118,7 @@ void dlt(Node *list, int pos){
 void clear_memory(Node *list){
 	Node *current = *list;
 	Node *nextNode;
-	// Looping through every Node and free memory from each one.
+	// Loop through every Node and free memory from each one.
 	while (current != NULL){
 		nextNode = current->tail;
 		free(current);
