@@ -3,10 +3,13 @@ typedef strcut Node {
 	struct Node *head;
 	long amnt;
 	char *desc;
+	char *status
 	struct Node *tail;
 } Node;
 
 // Functions used for LinkedList Nodes
-void add(Node **list, long value, char *str, int pos);
-void dlt(Node **list, int pos);
-void clearmem(Node **list);
+void addlast(Node *list, long value, char *words);
+void add(Node *list, long value, char *words, int pos, int length);
+void dlt(Node *list, int pos);
+void clear_memory(Node *list);
+void print(Node *list);
