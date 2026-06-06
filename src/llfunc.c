@@ -5,16 +5,46 @@
 /*
 	Functions list:
 		addlast
-		addfirst
 		add(position)
 		delete(position)
 		clear memory
 		print
-		quit
 */
 
+/*
+	addlast function:
+		Adds a node at the end of the circular linked list.
+		Connects the head of the first node and the tail of the last node to the new node, but at a position...
+		...where it occurs at the end of the circular linked list before it wraps back to the first node.
+*/
+void addlast(Node *list, long value, char *words){
+	Node *current = *list;
+	Node *n = (Node*)malloc(sizeof(Node));
+	if (n == NULL){
+		printf("Node memory allocation failed");
+                return;
+	}
+	n->amnt = value;
+	n->desc = *words;
+	if (*list == NULL && pos = 0){
+                n->head = NULL;
+                n->tail = n->head;
+                n->head = n->tail;
+                current = n;
+                return;
+        }
+	current = current->head;
+	n->head = current;
+        n->tail = current->tail;
+        current->tail->head = n;
+        current->tail = n;
+        return;
+}
 
-// Add a node to the circular, dynamic linked list with information at position pos
+/*
+	add function:
+		Add a node to the circular, dynamic linked list with information at position pos
+*/
 void add(Node *list, long value, char *words, int pos, int length){
 	Node *current = *list;
 	Node *n = (Node*)malloc(sizeof(Node));
@@ -26,7 +56,8 @@ void add(Node *list, long value, char *words, int pos, int length){
         n->desc = *words;
 	if (*list == NULL && pos = 0){
 		n->head = NULL;
-		n->tail = NULL;
+		n->tail = n->head;
+		n->head = n->tail;
 		current = n;
 		return;
 	}
@@ -53,7 +84,10 @@ void add(Node *list, long value, char *words, int pos, int length){
 	return;
 };
 
-// Delete node at position pos
+/*
+	dlt function:
+		Delete node at position pos
+*/
 void dlt(Node *list, int pos){
 	Node *current = list;
 	if (pos >= length){
@@ -77,7 +111,10 @@ void dlt(Node *list, int pos){
 	return;
 };
 
-// Clears all memory allocations
+/*
+	clear_memory function:
+		Clears all memory allocations
+*/
 void clear_memory(Node *list){
 	Node *current = *list;
 	Node *nextNode;
@@ -89,3 +126,15 @@ void clear_memory(Node *list){
 	}
 	*list = NULL;
 };
+
+/*
+	print function:
+		Prints the contents of the list, node by node, in the following format...
+			[ Transactions ]
+			1. [desc]   [amnt]   [status]
+			2. [desc]   [amnt]   [status]
+			3. [desc]   [amnt]   [status]
+*/
+void print(Node *list){
+
+}
