@@ -5,7 +5,7 @@
 #include "../include/linkedlist.h"
 
 int main(){
-	char conf[100];
+	char conf[200];
 	long total;
 	int length;
 	Node *list = NULL;
@@ -66,8 +66,6 @@ int main(){
 	printf("\nAvailable actions:\nadd income [amount] [description]\nadd income [amount] [description] [position]\n");
 	printf("add expense [amount] [description]\nadd expense [amount] [description] [position]\ndelete [position]\nprint\nquit\n"
 	while(1) {
-		printf("\n> ");
-		if (fgets(conf, sizeof(conf), stdin) != NULL) {
 		/*
 			Get command -> Interpret and execute designated function -> repeat until 'quit'
 			Command function guidelines:
@@ -83,6 +81,46 @@ int main(){
 								--length;
 				if command == "print" -> print(list)
 		*/
+                int wscount=0;
+                char cmnd[10];
+                char cmnd2[10];
+                int amnt;
+                char desc[100];
+                int pos;
+                printf("\n> ");
+                if (fgets(conf, sizeof(conf), stdin) != NULL) {
+                        for(int i = 0; i < strlen(conf); i++){
+                                if (char[i] == ' '){ wscount++; }
+                                if (wscount == 4){ break; }
+                        }
+                        switch(wscount){
+                                case 4:
+                                        int p = sscanf(conf, "%s %s %d %s %d", cmnd, cmnd2, &amnt, desc, &pos);
+                                        if (strcmp(cmnd2, "income") == 0){
+                                                add(&list, amnt, desc, pos, length);
+                                        }
+                                        else if (strcmp(cmnd2, "expense") == 0){
+                                                add(&list, -amnt, desc, pos, length);
+                                        }
+                                        length++;
+                                        break;
+                                case 3:
+                                        int p = sscanf(conf, "%s %s %d %s", cmnd, cmnd2, &amnt, desc);
+                                        if (strcmp(cmnd2, "income") == 0){
+                                                addlast(&list, amnt, desc, length);
+                                        }
+                                        else if (strcmp(cmnd2, "expense") == 0){
+                                                addlist(&list, -amnt, desc, length);
+                                        }
+                                        length++;
+                                        break;
+                                case 1:
+                                        int p = sscanf(conf, "%s %d", cmnd, &pos);
+                                                dlt(&list, pos, length);
+                                        break;
+                                default:
+                                        print(&list);
+                        }
 		}
 	}
 	/*
