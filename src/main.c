@@ -32,7 +32,7 @@ int main(){
 	if (strcmp(conf, "y") == 0){
 		printf("Resuming from last session...\n");
 		FILE *log = fopen("../logs/transaction_log", "r");
-		if (log != NULL){
+		if (log != NULL){ // IF NOT NULL AND HAS STUFF IN IT
 			list = (*Node)malloc(sizeof(Node));
 			if (*list == NULL){
 				printf("Node memory allocation failed");
@@ -44,6 +44,7 @@ int main(){
 					Each line in transaction_log must have the description, amount and status preserved when inserted into a node.
 				Do so by utilizing 'addlast' function. Add 1 to length at every addition.
 			*/
+			fclose(log);
 		}
 		else {
 			list = (*Node)malloc(sizeof(Node));
@@ -95,7 +96,7 @@ int main(){
                         }
                         switch(wscount){
                                 case 4:
-                                        int p = sscanf(conf, "%s %s %d %s %d", cmnd, cmnd2, &amnt, desc, &pos);
+                                        int p = sscanf(conf, "%s %s %ld %s %d", cmnd, cmnd2, &amnt, desc, &pos);
                                         if (strcmp(cmnd2, "income") == 0){
                                                 add(&list, amnt, desc, pos, length);
                                         }
@@ -105,7 +106,7 @@ int main(){
                                         length++;
                                         break;
                                 case 3:
-                                        int p = sscanf(conf, "%s %s %d %s", cmnd, cmnd2, &amnt, desc);
+                                        int p = sscanf(conf, "%s %s %ld %s", cmnd, cmnd2, &amnt, desc);
                                         if (strcmp(cmnd2, "income") == 0){
                                                 addlast(&list, amnt, desc, length);
                                         }
@@ -123,6 +124,22 @@ int main(){
                         }
 		}
 	}
+	FILE *log = fopen("../logs/transaction_log.txt", "w");
+	if (log == NULL){
+		// create transaction_log.txt in ../logs/
+	}
+	int count = 1;
+	Node *current = list;
+	for (int i = 0; i < length; i++){
+		if (strcmp(current->status, "--- d") == 0){
+			continue;
+		}
+		else {
+			fprintf(log, "%d. %s %ld (saved)", count, current->desc, current->amnt);
+		}
+	}
+	clear_memory(&list);
+
 	/*
 		Save all transactions into ../logs/transaction_log.txt, clear memory and exit the program
 
