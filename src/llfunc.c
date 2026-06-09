@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../include/linkedlist.h"
 
 /*
@@ -274,7 +275,7 @@ void clear_memory(Node *list){
 	}
 
 	*list = NULL;
-	printf("\nMemory cleared\n")
+	printf("\nMemory cleared\n");
 	/*
 	***Past Code:***
 
