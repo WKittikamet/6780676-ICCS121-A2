@@ -1,3 +1,6 @@
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+
 // Defining the LinkedList Node structure;
 typedef strcut Node {
 	struct Node *head;
@@ -13,3 +16,5 @@ void add(Node *list, long value, char *words, int pos, int length);
 void dlt(Node *list, int pos);
 void clear_memory(Node *list);
 void print(Node *list);
+
+#endif
