@@ -8,6 +8,9 @@ int main(){
 	char conf[200];
 	long total;
 	int length;
+	char desc[100];
+	int amnt;
+	char status[10];
 	Node *list = NULL;
 	printf("**Starting the Program (Loading Previous Transactions)**\n");
 	printf("\n**Original Log File (logs/transaction_log.txt) Before Running the Program:**\n");
@@ -39,12 +42,17 @@ int main(){
 				return 1;
 			}
 			length=0;
+			for(fgets(conf, sizeof(conf), log)){
+				int p = sscanf(conf, "%s\t%d\t%s", desc, &amnt, stauts);
+				addlast(list, amnt, desc);
+				length++;
+			}
+			fclose(log);
 			/*
 				Insert all contents from the transaction_log.txt into the list:
 					Each line in transaction_log must have the description, amount and status preserved when inserted into a node.
 				Do so by utilizing 'addlast' function. Add 1 to length at every addition.
 			*/
-			fclose(log);
 		}
 		else {
 			list = (*Node)malloc(sizeof(Node));
@@ -54,6 +62,7 @@ int main(){
                 	}
                 	length=0;
 			printf("No previous transactions found. Continuing with new transaction.\n")
+			fclose(log);
 		}
 	}
 	else {
@@ -85,8 +94,6 @@ int main(){
                 int wscount=0;
                 char cmnd[10];
                 char cmnd2[10];
-                int amnt;
-                char desc[100];
                 int pos;
                 printf("\n> ");
                 if (fgets(conf, sizeof(conf), stdin) != NULL) {
@@ -98,35 +105,36 @@ int main(){
                                 case 4:
                                         int p = sscanf(conf, "%s %s %ld %s %d", cmnd, cmnd2, &amnt, desc, &pos);
                                         if (strcmp(cmnd2, "income") == 0){
-                                                add(&list, amnt, desc, pos, length);
+                                                add(list, amnt, desc, pos, length);
                                         }
                                         else if (strcmp(cmnd2, "expense") == 0){
-                                                add(&list, -amnt, desc, pos, length);
+                                                add(list, -amnt, desc, pos, length);
                                         }
                                         length++;
                                         break;
                                 case 3:
                                         int p = sscanf(conf, "%s %s %ld %s", cmnd, cmnd2, &amnt, desc);
                                         if (strcmp(cmnd2, "income") == 0){
-                                                addlast(&list, amnt, desc, length);
+                                                addlast(list, amnt, desc);
                                         }
                                         else if (strcmp(cmnd2, "expense") == 0){
-                                                addlist(&list, -amnt, desc, length);
+                                                addlist(list, -amnt, desc);
                                         }
                                         length++;
                                         break;
                                 case 1:
                                         int p = sscanf(conf, "%s %d", cmnd, &pos);
-                                                dlt(&list, pos, length);
+                                                dlt(list, pos, length);
                                         break;
                                 default:
-                                        print(&list);
+                                        print(list);
                         }
 		}
 	}
 	FILE *log = fopen("../logs/transaction_log.txt", "w");
 	if (log == NULL){
-		// create transaction_log.txt in ../logs/
+		printf("Unable to save");
+		return 1;
 	}
 	int count = 1;
 	Node *current = list;
@@ -138,7 +146,7 @@ int main(){
 			fprintf(log, "%d. %s %ld (saved)", count, current->desc, current->amnt);
 		}
 	}
-	clear_memory(&list);
+	clear_memory(list);
 
 	/*
 		Save all transactions into ../logs/transaction_log.txt, clear memory and exit the program

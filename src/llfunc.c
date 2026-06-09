@@ -81,7 +81,7 @@ void addlast(Node *list, long value, char *words){
 	add function:
 		Add a node to the circular, dynamic linked list with information at position pos
 */
-void add(Node **list, long value, char *words, int pos, int length){
+void add(Node *list, long value, char *words, int pos, int length){
 	// Condtion for an out of bounds position.
 	if (pos > length || pos < 0){
 		printf("Position is out of bounds");
@@ -165,7 +165,7 @@ void add(Node **list, long value, char *words, int pos, int length){
 	dlt function:
 		Mark the node for deletion
 */
-void dlt(Node **list, int pos, int length){
+void dlt(Node *list, int pos, int length){
 	if (pos >= length || pos < 0){
 		printf("Position is out of bounds");
 		return;
@@ -214,7 +214,7 @@ void dlt(Node **list, int pos, int length){
 	clear_memory function:
 		Clears all memory allocations
 */
-void clear_memory(Node **list){
+void clear_memory(Node *list){
 	if (*list == NULL){ return; }
 
 	Node *current = *list;
