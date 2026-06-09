@@ -2,7 +2,7 @@
 #define LINKEDLIST_H
 
 // Defining the LinkedList Node structure;
-typedef strcut Node {
+typedef struct Node {
 	struct Node *head;
 	long amnt;
 	char *desc;
@@ -11,10 +11,10 @@ typedef strcut Node {
 } Node;
 
 // Functions used for LinkedList Nodes
-void addlast(Node *list, long value, char *words);
-void add(Node *list, long value, char *words, int pos, int length);
-void dlt(Node *list, int pos);
+void addlast(Node *list, long value, char *words, int *length, long *total);
+void add(Node *list, long value, char *words, int pos, int *length, long *total);
+long dlt(Node *list, int pos, int *length, long *total);
 void clear_memory(Node *list);
-void print(Node *list);
+void print(Node *list, int *length);
 
 #endif
