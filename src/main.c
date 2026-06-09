@@ -47,7 +47,7 @@ int main(){
 		FILE *log = fopen("../logs/transaction_log.txt", "r");
 		// Check if transaction_log.txt exists in the logs folder
 		if (log != NULL){
-			list = (*Node)malloc(sizeof(Node));
+			list = (Node*)malloc(sizeof(Node));
 			// Check if the memory allocation for the linked list failed
 			if (*list == NULL){
 				printf("\nNode memory allocation failed\n");
@@ -56,8 +56,8 @@ int main(){
 			// Check if transaction_log.txt is empty
 			if(fgetc(log) != EOF) {
 				for(fgets(conf, sizeof(conf), log)){
-					int p = sscanf(conf, "%s\t%ld\t%s", desc, &amnt, stauts);
-					addlast(list, amnt, desc);
+					int p = sscanf(conf, "%s\t%ld\t%s", desc, &amnt, status);
+					addlast(list, amnt, desc, length, total);
 					*length++;
 					*total += amnt;
 				}
@@ -74,7 +74,7 @@ int main(){
                        		printf("\nNode memory allocation failed\n");
                         	return 1;
                 	}
-			printf("\nNo previous transactions found. Continuing with new transaction.\n")
+			printf("\nNo previous transactions found. Continuing with new transaction.\n");
 			fclose(log);
 		}
 	}
@@ -88,7 +88,7 @@ int main(){
 
 	// Section 3: Transaction Management
 	printf("\nAvailable actions:\nadd income [amount] [description]\nadd income [amount] [description] [position]\n");
-	printf("add expense [amount] [description]\nadd expense [amount] [description] [position]\ndelete [position]\nprint\nquit\n"
+	printf("add expense [amount] [description]\nadd expense [amount] [description] [position]\ndelete [position]\nprint\nquit\n");
 	while(1) {
 		/*
 			Get command -> Interpret and execute designated function -> repeat until 'quit'
