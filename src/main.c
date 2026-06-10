@@ -47,17 +47,13 @@ int main(){
 		FILE *log = fopen("../logs/transaction_log.txt", "r");
 		// Check if transaction_log.txt exists in the logs folder
 		if (log != NULL){
-			list = (Node*)malloc(sizeof(Node));
 			// Check if the memory allocation for the linked list failed
-			if (*list == NULL){
-				printf("\nNode memory allocation failed\n");
-				return 1;
-			}
+			// if (list == NULL){ ... }
 			// Check if transaction_log.txt is empty
 			if(fgetc(log) != EOF) {
-				for(fgets(conf, sizeof(conf), log)){
+				while (fgets(conf, sizeof(conf), log) != NULL) {
 					int p = sscanf(conf, "%s\t%ld\t%s", desc, &amnt, status);
-					addlast(list, amnt, desc, length, total);
+					addlast(&list, amnt, desc, length, total);
 					*length++;
 					*total += amnt;
 				}
@@ -69,23 +65,26 @@ int main(){
 			fclose(log);
 		}
 		else {
+			/*
 			list = (*Node)malloc(sizeof(Node));
-			if (*list == NULL){
+			if (list == NULL){
                        		printf("\nNode memory allocation failed\n");
                         	return 1;
                 	}
+			*/
 			printf("\nNo previous transactions found. Continuing with new transaction.\n");
 			fclose(log);
 		}
 	}
+	/*
 	else {
 		list = (*Node)malloc(sizeof(Node));
-        	if (*list == NULL){
+        	if (list == NULL){
                 	printf("\nNode memory allocation failed\n");
                         return 1;
        		}
 	}
-
+	*/
 	// Section 3: Transaction Management
 	printf("\nAvailable actions:\nadd income [amount] [description]\nadd income [amount] [description] [position]\n");
 	printf("add expense [amount] [description]\nadd expense [amount] [description] [position]\ndelete [position]\nprint\nquit\n");
@@ -114,47 +113,52 @@ int main(){
                 char cmnd[10];
                 char cmnd2[10];
                 int pos;
-		printf("\nCurrent total: %ld\n", total);
+		int p;
+		printf("\nCurrent total: %ld\n", *total);
                 printf("\n> ");
                 if (fgets(conf, sizeof(conf), stdin) != NULL) {
 			conf[strcspn(conf, "\n")] = '\0';
+			if (strcmp(conf, "quit") == 0) {
+                                break;
+                        }
 			// Counting the whitespace between arguments helps indicate what command the user inputed
                         for(int i = 0; i < strlen(conf); i++){
-                                if (char[i] == ' '){ wscount++; }
+                                if (conf[i] == ' '){ wscount++; }
                                 if (wscount == 4){ break; }
                         }
                         switch(wscount){
 				// IMPORTANT NOTE: need to include checks for errors/incomplete arguments/wrong arguments for all cases
 				// Four whitespaces indicate adding an income/expense at a certain position
                                 case 4:
-                                        int p = sscanf(conf, "%s %s %ld %s %d", cmnd, cmnd2, &amnt, desc, &pos);
+                                        p = sscanf(conf, "%s %s %ld %s %d", cmnd, cmnd2, &amnt, desc, &pos);
                                         if (strcmp(cmnd2, "income") == 0){
-                                                add(list, amnt, desc, pos, length, total);
+                                                add(&list, amnt, desc, pos, length, total);
                                         }
                                         else if (strcmp(cmnd2, "expense") == 0){
-                                                add(list, -amnt, desc, pos, length, total);
+                                                add(&list, -amnt, desc, pos, length, total);
                                         }
                                         break;
 				// Three whitespaces indicate adding an income/expense with no location given
                                 case 3:
-                                        int p = sscanf(conf, "%s %s %ld %s", cmnd, cmnd2, &amnt, desc);
+                                        p = sscanf(conf, "%s %s %ld %s", cmnd, cmnd2, &amnt, desc);
                                         if (strcmp(cmnd2, "income") == 0){
-                                                addlast(list, amnt, desc, length, total);
+                                                addlast(&list, amnt, desc, length, total);
                                         }
                                         else if (strcmp(cmnd2, "expense") == 0){
-                                                addlist(list, -amnt, desc, length, total);
+                                                addlast(&list, -amnt, desc, length, total);
                                         }
                                         break;
 				// One whitespace indicate deleting a transaction at a certain position
                                 case 1:
-                                        int p = sscanf(conf, "%s %d", cmnd, &pos);
-					total -= dlt(list, pos, length, total);
+                                        p = sscanf(conf, "%s %d", cmnd, &pos);
+					total -= dlt(&list, pos, length, total);
                                         break;
 				// No whitespace indicates print
                                 default:
 					if (strcmp(conf, "print") == 0){
-						print(list);
+						print(list, length);
 					}
+					break;
                         }
 		}
 	}
@@ -174,19 +178,20 @@ int main(){
 	FILE *log = fopen("../logs/transaction_log.txt", "w");
 	if (log == NULL){
 		printf("\nUnable to save\n");
-		clear_memory(list);
+		clear_memory(&list);
 		return 1;
 	}
-	int count = 1;
-	Node *current = list;
-	for (int i = 0; i < length; i++){
-		if (strcmp(current->status, "--- d") == 0){
-			continue;
-		}
-		else {
-			fprintf(log, "%d. %s %ld (saved)", count, current->desc, current->amnt);
+	if (list != NULL) {
+		Node *current = list;
+		for (int i = 0; i < *length; i++){
+			if (strcmp(current->status, "--- d") == 0){
+				continue;
+			}
+			else {
+				fprintf(log, "%s\t%ld\t(saved)", current->desc, current->amnt);
+			}
 		}
 	}
-	clear_memory(list);
+	clear_memory(&list);
 	return 0;
 }
