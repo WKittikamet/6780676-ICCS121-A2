@@ -18,7 +18,7 @@
 		Connects the head of the first node and the tail of the last node to the new node, but at a position...
 		...where it occurs at the end of the circular linked list before it wraps back to the first node.
 */
-void addlast(Node *list, long value, char *words, int *length, long *total){
+void addlast(Node **list, long value, char *words, int *length, long *total){
 	// Initialize the new transaction.
 	Node *n = (Node*)malloc(sizeof(Node));
         if (n == NULL){
@@ -31,7 +31,7 @@ void addlast(Node *list, long value, char *words, int *length, long *total){
         n->desc = (char*)malloc(strlen(words) + 1);
         strcpy(n->desc, words);
         // Allocate space for the status of the added transaction.
-        n->stauts = (char*)malloc(strlen("(new)") + 1);
+        n->status = (char*)malloc(strlen("(new)") + 1);
         strcpy(n->status, "(new)");
 
         if (*list == NULL){
@@ -43,7 +43,7 @@ void addlast(Node *list, long value, char *words, int *length, long *total){
         else {
                 // Get both the first and last nodes.
                 Node *first = *list;
-                Node *last = list->head;
+                Node *last = first->head;
 
                 // Set the last node's tail and the first node's head pointing to new transaction
                 n->tail = first;
@@ -52,16 +52,14 @@ void addlast(Node *list, long value, char *words, int *length, long *total){
                 first->head = n;
         }
 	if (value >= (long)0){
-        	printf("Added income of %ld [%s]", value, *words);
-        	// Update the total number of currency after transactions and the length of the list.
-        	*total += value;
-        	*length++;
+        	printf("Added income of %ld [%s]", value, words);
 	}
 	else {
-        	printf("Added expense of %ld [%s]", value, *words);
-        	*total += value;
-        	*length++;
+        	printf("Added expense of %ld [%s]", value, words);
 	}
+        // Update the total number of currency after transactions and the length of the list.
+        *total += value;
+        (*length)++;
 
 
 	/*
@@ -97,7 +95,7 @@ void addlast(Node *list, long value, char *words, int *length, long *total){
 		Add a node to the circular, dynamic linked list with information at position pos.
 		Update the list with a node at position pos with the following information.
 */
-void add(Node *list, long value, char *words, int pos, int *length, long *total){
+void add(Node **list, long value, char *words, int pos, int *length, long *total){
 	// Condtion for an out of bounds position.
 	if (pos > *length || pos < 0){
 		printf("\nPosition is out of bounds\n");
@@ -139,17 +137,19 @@ void add(Node *list, long value, char *words, int pos, int *length, long *total)
 	prevNode->tail = n;
 	current->head = n;
 
+	if (pos == 0) {
+                *list = n;
+        }
+
 	if (value >= (long)0){
-                printf("Added income of %ld at position %d [%s]", value, pos, *words);
-                // Update the total number of currency after transactions and the length of the list.
-                *total += value;
-                *length++;
+                printf("Added income of %ld at position %d [%s]", value, pos, words);
         }
         else {
-                printf("Added expense of %ld at position %d [%s]", value, pos, *words);
-                *total += value;
-                *length++;
+                printf("Added expense of %ld at position %d [%s]", value, pos, words);
         }
+        // Update the total number of currency after transactions and the length of the list.
+        *total += value;
+        (*length)++;
 	/*
 	***Past Code:***
 
@@ -197,14 +197,14 @@ void add(Node *list, long value, char *words, int pos, int *length, long *total)
 		Mark the node for deletion. Update the node in the list with a "deletion" status --> status of "--- d"
 		Additionally, this function will return the transaction amount for the purpose of deducting the total.
 */
-long dlt(Node *list, int pos, int *length, long *total){
+long dlt(Node **list, int pos, int *length, long *total){
 	// Check if the given position is out of bounds of the length of the list.
 	if (pos >= *length || pos < 0){
 		printf("\nPosition is out of bounds\n");
 		printf("\nFailed to mark transaction for deletion\n");
 		return (long)0;
 	}
-	if (list == NULL){
+	if (*list == NULL){
 		printf("\nNo transactions exists to delete\n");
 		printf("Failed to mark transaction for deletion\n");
 		return (long)0;
@@ -227,7 +227,7 @@ long dlt(Node *list, int pos, int *length, long *total){
 	}
 
 	free(current->status);
-	current->status = (str*)malloc(strlen("--- d") + 1);
+	current->status = (char*)malloc(strlen("--- d") + 1);
 	strcpy(current->status, "--- d");
 	printf("Transaction number %d is marked for deletion", pos);
 	/*
@@ -259,8 +259,8 @@ long dlt(Node *list, int pos, int *length, long *total){
 	clear_memory function:
 		Clears all memory allocations
 */
-void clear_memory(Node *list){
-	if (*list == NULL){ return; }
+void clear_memory(Node **list){
+	if (*list == NULL || list == NULL){ return; }
 
 	Node *current = *list;
 	Node *nextNode;
@@ -306,7 +306,7 @@ void print(Node *list, int *length){
 	Node *current = list;
 	printf("[ Transactions ]");
 	for (int i = 0; i < *length; i++){
-		printf("%d. %s\t%.2f\t%s\n", i+1, current->desc, current->amnt, current->status);
+		printf("%d. %s\t%ld\t%s\n", i+1, current->desc, current->amnt, current->status);
 		current = current->tail;
 	}
 }
