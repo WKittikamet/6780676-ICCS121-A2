@@ -11,9 +11,9 @@ typedef struct Node {
 } Node;
 
 // Functions used for LinkedList Nodes
-void addlast(Node **list, long value, char *words, int *length, long *total);
+void addlast(Node **list, long value, char *words, int *length, long *total, char *stat);
 void add(Node **list, long value, char *words, int pos, int *length, long *total);
-long dlt(Node **list, int pos, int *length, long *total);
+void dlt(Node **list, int pos, int *length, long *total);
 void clear_memory(Node **list);
 void print(Node *list, int *length);
 
