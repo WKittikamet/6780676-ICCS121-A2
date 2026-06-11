@@ -4,15 +4,6 @@
 #include "../include/linkedlist.h"
 
 /*
-	Functions list:
-		addlast
-		add(position)
-		delete(position)
-		clear memory
-		print
-*/
-
-/*
 	addlast function:
 		Adds a node at the end of the circular linked list. Essentially, we want to updated the list with a new node at the end of the list.
 		Connects the head of the first node and the tail of the last node to the new node, but at a position...
@@ -60,34 +51,6 @@ void addlast(Node **list, long value, char *words, int *length, long *total, cha
         // Update the total number of currency after transactions and the length of the list.
         *total += value;
         (*length)++;
-
-
-	/*
-	***Past Code:***
-
-	Node *current = *list;
-	Node *n = (Node*)malloc(sizeof(Node));
-	if (n == NULL){
-		printf("Node memory allocation failed");
-                return;
-	}
-	n->amnt = value;
-	n->desc = *words;
-	n->stauts = "(new)";
-	if (*list == NULL && pos = 0){
-                n->head = NULL;
-                n->tail = n->head;
-                n->head = n->tail;
-                current = n;
-                return;
-        }
-	current = current->head;
-	n->head = current;
-        n->tail = current->tail;
-        current->tail->head = n;
-        current->tail = n;
-        return;
-	*/
 }
 
 /*
@@ -150,46 +113,6 @@ void add(Node **list, long value, char *words, int pos, int *length, long *total
         // Update the total number of currency after transactions and the length of the list.
         *total += value;
         (*length)++;
-	/*
-	***Past Code:***
-
-	Node *current = *list;
-	Node *n = (Node*)malloc(sizeof(Node));
-	if (n == NULL){
-		printf("Node memory allocation failed");
-		return;
-	}
-	n->amnt = value;
-        n->desc = *words;
-	n->status = "+++ i";
-	if (*list == NULL && pos = 0){
-		n->head = NULL;
-		n->tail = n->head;
-		n->head = n->tail;
-		current = n;
-		return;
-	}
-	if (pos > length){
-                printf("Location out of bounds");
-                return;
-        }
-	else if (pos > length/2){
-		current = current->head;
-		for (int i = 0; i < length-pos; i++){
-			current = current->head;
-		}
-	}
-	else {
-		for (int i = 0; i < pos; i++){
-			current = current->tail;
-		}
-	}
-        n->head = current->head;
-        n->tail = current;
-        current->head->tail = n;
-        current->head = n;
-        current=n;
-	return;*/
 }
 
 /*
@@ -230,28 +153,6 @@ void dlt(Node **list, int pos, int *length, long *total){
 	strcpy(current->status, "--- d");
 	*total -= current->amnt;
 	printf("Transaction at position %d marked for deletion.", pos);
-	/*
-	***Past Code:***
-
-	Node *current = list;
-	if (pos >= length){
-                printf("Location out of bounds");
-                return;
-        }
-        else if (pos > length/2){
-                current = current->head;
-                for (int i = 0; i < length-pos; i++){
-                        current = current->head;
-                }
-        }
-        else {
-                for (int i = 0; i < pos; i++){
-                        current = current->tail;
-                }
-        }
-	current->status = "--- d";
-	return;
-	*/
 	return;
 }
 
@@ -276,18 +177,6 @@ void clear_memory(Node **list){
 
 	*list = NULL;
 	printf("\nMemory cleared\n");
-	/*
-	***Past Code:***
-
-	Node *current = *list;
-	Node *nextNode;
-	// Loop through every Node and free memory from each one.
-	while (current != NULL){
-		nextNode = current->tail;
-		free(current);
-		current = nextNode;
-	}
-	*list = NULL;*/
 }
 
 /*

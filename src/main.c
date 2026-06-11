@@ -61,26 +61,11 @@ int main(){
 			fclose(log);
 		}
 		else {
-			/*
-			list = (*Node)malloc(sizeof(Node));
-			if (list == NULL){
-                       		printf("\nNode memory allocation failed\n");
-                        	return 1;
-                	}
-			*/
 			printf("\nNo previous transactions found. Continuing with new transaction.\n");
 			fclose(log);
 		}
 	}
-	/*
-	else {
-		list = (*Node)malloc(sizeof(Node));
-        	if (list == NULL){
-                	printf("\nNode memory allocation failed\n");
-                        return 1;
-       		}
-	}
-	*/
+
 	// Section 3: Transaction Management
 	printf("\nAvailable actions:\nadd income [amount] [description]\nadd income [amount] [description] [position]\n");
 	printf("add expense [amount] [description]\nadd expense [amount] [description] [position]\ndelete [position]\nprint\nquit\n");
