@@ -18,7 +18,7 @@
 		Connects the head of the first node and the tail of the last node to the new node, but at a position...
 		...where it occurs at the end of the circular linked list before it wraps back to the first node.
 */
-void addlast(Node **list, long value, char *words, int *length, long *total){
+void addlast(Node **list, long value, char *words, int *length, long *total, char *stat){
 	// Initialize the new transaction.
 	Node *n = (Node*)malloc(sizeof(Node));
         if (n == NULL){
@@ -31,8 +31,8 @@ void addlast(Node **list, long value, char *words, int *length, long *total){
         n->desc = (char*)malloc(strlen(words) + 1);
         strcpy(n->desc, words);
         // Allocate space for the status of the added transaction.
-        n->status = (char*)malloc(strlen("(new)") + 1);
-        strcpy(n->status, "(new)");
+        n->status = (char*)malloc(strlen(stat) + 1);
+        strcpy(n->status, stat);
 
         if (*list == NULL){
                 // In the case of an empty list, initialize the first node by having its head and tail point to eachother.
@@ -52,10 +52,10 @@ void addlast(Node **list, long value, char *words, int *length, long *total){
                 first->head = n;
         }
 	if (value >= (long)0){
-        	printf("Added income of %ld [%s]", value, words);
+        	printf("Income added.");
 	}
 	else {
-        	printf("Added expense of %ld [%s]", value, words);
+        	printf("Expense added.");
 	}
         // Update the total number of currency after transactions and the length of the list.
         *total += value;
@@ -142,10 +142,10 @@ void add(Node **list, long value, char *words, int pos, int *length, long *total
         }
 
 	if (value >= (long)0){
-                printf("Added income of %ld at position %d [%s]", value, pos, words);
+                printf("Income added at position %d.", pos);
         }
         else {
-                printf("Added expense of %ld at position %d [%s]", value, pos, words);
+                printf("Expense added at position %d.", pos);
         }
         // Update the total number of currency after transactions and the length of the list.
         *total += value;
@@ -197,17 +197,17 @@ void add(Node **list, long value, char *words, int pos, int *length, long *total
 		Mark the node for deletion. Update the node in the list with a "deletion" status --> status of "--- d"
 		Additionally, this function will return the transaction amount for the purpose of deducting the total.
 */
-long dlt(Node **list, int pos, int *length, long *total){
+void dlt(Node **list, int pos, int *length, long *total){
 	// Check if the given position is out of bounds of the length of the list.
 	if (pos >= *length || pos < 0){
 		printf("\nPosition is out of bounds\n");
 		printf("\nFailed to mark transaction for deletion\n");
-		return (long)0;
+		return;
 	}
 	if (*list == NULL){
 		printf("\nNo transactions exists to delete\n");
 		printf("Failed to mark transaction for deletion\n");
-		return (long)0;
+		return;
 	}
 	Node *current = *list;
 	/*
@@ -215,7 +215,6 @@ long dlt(Node **list, int pos, int *length, long *total){
 		Otherwise, traverse normally from the head to the tail
 	*/
 	if (pos > *length/2){
-		current = current->head;
 		for (int i = 0; i < *length-pos; i++){
 			current = current->head;
 		}
@@ -229,7 +228,8 @@ long dlt(Node **list, int pos, int *length, long *total){
 	free(current->status);
 	current->status = (char*)malloc(strlen("--- d") + 1);
 	strcpy(current->status, "--- d");
-	printf("Transaction number %d is marked for deletion", pos);
+	*total -= current->amnt;
+	printf("Transaction at position %d marked for deletion.", pos);
 	/*
 	***Past Code:***
 
@@ -252,7 +252,7 @@ long dlt(Node **list, int pos, int *length, long *total){
 	current->status = "--- d";
 	return;
 	*/
-	return current->amnt;
+	return;
 }
 
 /*
@@ -304,7 +304,7 @@ void print(Node *list, int *length){
 		return;
 	}
 	Node *current = list;
-	printf("[ Transactions ]");
+	printf("[ Transactions ]\n");
 	for (int i = 0; i < *length; i++){
 		printf("%d. %s\t%ld\t%s\n", i+1, current->desc, current->amnt, current->status);
 		current = current->tail;
