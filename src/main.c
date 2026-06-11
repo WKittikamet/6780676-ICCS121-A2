@@ -116,7 +116,6 @@ int main(){
                                 if (wscount == 4){ break; }
                         }
                         switch(wscount){
-				// IMPORTANT NOTE: need to include checks for errors/incomplete arguments/wrong arguments for all cases
 				// Four whitespaces indicate adding an income/expense at a certain position
                                 case 4:
                                         p = sscanf(conf, "%s %s %ld %s %d", cmnd, cmnd2, &amnt, desc, &pos);
