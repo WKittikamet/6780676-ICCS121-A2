@@ -26,7 +26,12 @@ llfunc.i: src/llfunc.c logs/transaction_log.txt
 logs/transaction_log.txt:
 	touch logs/transaction_log.txt
 
-.PHONY: clean
+.PHONY: clean dist
+
+dist:
+	zip -r fintrack.zip src/ include/ logs/ report/ Makefile
+	mv fintrack.zip dist
+
 clean:
 	rm -rf *.o
 	rm -rf *.s
