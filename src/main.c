@@ -53,6 +53,13 @@ int main(){
 			// conf is used to store the user inputed line
 			while (fgets(conf, sizeof(conf), log) != NULL) {
 				int p = sscanf(conf, "%s\t%ld\t%s", desc, &amnt, status);
+				// If the transaction_log.txt has an entry that does not follow our saving pattern, then we exit the program
+				// Saving pattern: desc[tab space]amnt[tab space]status
+				if (p != 3){
+					printf("Previous session is corrupted");
+					clear_memory(&list);
+					return 1;
+				}
 				status[strcspn(status, "\n")] = '\0';
 				addlast(&list, amnt, desc, length, total, status);
 				printf("\n");
@@ -71,31 +78,11 @@ int main(){
 	printf("add expense [amount] [description]\nadd expense [amount] [description] [position]\ndelete [position]\nprint\nquit\n");
 	printf("Disclaimer: [position] starts from 1\n");
 	while(1) {
-		/*
-			Get command -> Interpret and execute designated function -> repeat until 'quit'
-			Command function guidelines:
-				if command == "add income [amount] [desc]" -> addlast(list, amount, desc)
-									      ++length;
-                                                                              total += amount;
-				if command == "add expense [amount] [desc]" -> addlast(list, -(amount), desc)
-                                                                              ++length;
-                                                                              total -= amount;
-				if command == "add income [amount] [desc] [pos]" -> add(list, amount, desc, pos, length)
-                                                                                    ++length;
-                                                                                    total += amount;
-                                if command == "add expense [amount] [desc] [pos]" -> add(list, -(amount), desc, pos, length)
-                                                                                     ++length;
-                                                                                     total -= amount;
-				if command == "delete [pos]" -> dlt(list, pos)
-								--length;
-                                                                total -= amount at pos;
-				if command == "print" -> print(list)
-		*/
-                int wscount=0;
-                char cmnd[10];
-                char cmnd2[10];
-                int pos;
-		int p;
+                int wscount=0; // wscount is our counter for whitespace in the user input
+                char cmnd[10]; // cmnd will represent the first argument given in the user input
+                char cmnd2[10]; // cmnd2 will represent the second argument given in the user input
+                int pos; // pos will hold the user inputed position
+		int p; // p will be used for sscanf and tell us how many arguments in the user input match the specified pattern
 		printf("\nCurrent total: %ld\n", *total);
 		if (*total >= (long)0){
                         printf("Budget Status: Within Budget\n");
@@ -104,8 +91,10 @@ int main(){
 			printf("Budget Status: Over Budget!\n");
 		}
 		printf("```\n\n```");
+		// This part takes the user inputed line of arguments
                 printf("\n> ");
                 if (fgets(conf, sizeof(conf), stdin) != NULL) {
+			// Replace the newline with a NULL terminator so the string can be used in comparisons
 			conf[strcspn(conf, "\n")] = '\0';
 			if (strcmp(conf, "quit") == 0) {
                                 break;
@@ -116,10 +105,12 @@ int main(){
                                 if (wscount == 4){ break; }
                         }
                         switch(wscount){
+				// if command == "add [income/expense] [amount] [desc] [pos]" -> add(&list, [amnt/-amnt], desc, pos-1, length, total);
 				// Four whitespaces indicate adding an income/expense at a certain position
                                 case 4:
                                         p = sscanf(conf, "%s %s %ld %s %d", cmnd, cmnd2, &amnt, desc, &pos);
 					if (p == 5 && strcmp(cmnd, "add") == 0){
+						// Negative numbers are not allowed to be inputed as a transaction
 						if (amnt < (long)0){
 							printf("\nInvalid transaction amount\n");
 						}
@@ -139,6 +130,7 @@ int main(){
                                                 printf("\nInvalid Command\n");
                                      	}
                                         break;
+                                // if command == "add [income/expense] [amount] [desc]" -> addlast(&list, [amnt/-amnt], desc, length, total, "(new)");
 				// Three whitespaces indicate adding an income/expense with no location given
                                 case 3:
                                         p = sscanf(conf, "%s %s %ld %s", cmnd, cmnd2, &amnt, desc);
@@ -162,6 +154,7 @@ int main(){
 						printf("\nInvalid Command\n");
 					}
                                         break;
+				// if command == "delete [pos]" -> dlt(&list, pos-1, length, total);
 				// One whitespace indicate deleting a transaction at a certain position
                                 case 1:
                                         p = sscanf(conf, "%s %d", cmnd, &pos);
@@ -173,6 +166,7 @@ int main(){
 						printf("\nInvalid Command\n");
 					}
                                         break;
+				// if command == "print" -> print(list, length);
 				// No whitespace indicates print
                                 default:
 					if (strcmp(conf, "print") == 0){
@@ -187,17 +181,7 @@ int main(){
 	}
 
 	// Section 4: Saving and Clearing
-	/*
-                Save all transactions into ../logs/transaction_log.txt, clear memory and exit the program
-
-                If no transaction_log.txt exists, create a new one in ../logs/.
-                Else if one does exist, then we overwrite it and save our current transactions
-
-                Saving to transaction_log.txt goes as follows:
-                        if the status of a node is "--- d", then they will not be saved saved onto transaction_log.txt
-                        Otherwise, save each node's amnt, desc and status as "(saved)" into their own lines in transaction_log.txt in the following format:
-                                [desc]  [amnt]  (saved)
-        */
+        // Save all transactions into ../logs/transaction_log.txt, clear memory and exit the program.
 	printf("\nSaving transactions to file...\n\n");
 	FILE *log = fopen("../logs/transaction_log.txt", "w");
 	if (log == NULL){
@@ -209,13 +193,16 @@ int main(){
 		printf("# Format: TYPE|DESCRIPTION|AMOUNT\n# TYPE: INC (Income) or EXP (Expense)\n# AMOUNT: Positive decimal number\n\n");
 		Node *current = list;
 		for (int i = 0; i < *length; i++){
+			// Indicate the ones that are marked for deletion, and then continue to the next Node
 			if (strcmp(current->status, "--- d") == 0){
 				printf("- **%s (%ld) was removed**\n", current->desc, current->amnt);
 				current = current->tail;
 				continue;
 			}
+			// Each transaction gets saved into transaction_log.txt in the following format: [desc]  [amnt]  (saved)
 			else {
 				fprintf(log, "%s\t%ld\t(saved)\n", current->desc, current->amnt);
+				// Indicate the ones that were inserted at a specific position
 				if (strcmp(current->status, "+++ i") == 0){
 					if (current->amnt >= (long)0){
                                         	printf("INC(insert)|%s|%ld\n", current->desc, current->amnt);
