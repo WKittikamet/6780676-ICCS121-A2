@@ -1,6 +1,6 @@
 CC = gcc
 
-all: release/fintrack logs/transaction_log.txt clean
+all: release/fintrack logs/transaction_log.txt clean dist
 
 release/fintrack: main.o llfunc.o
 	gcc main.o llfunc.o -o release/fintrack
