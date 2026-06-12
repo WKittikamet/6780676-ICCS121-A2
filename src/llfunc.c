@@ -26,7 +26,7 @@ void addlast(Node **list, long value, char *words, int *length, long *total, cha
         strcpy(n->status, stat);
 
         if (*list == NULL){
-                // In the case of an empty list, initialize the first node by having its head and tail point to eachother.
+                // In the case of an empty list, initialize the first node by having its head and tail point to each other.
                 n->tail = n;
                 n->head = n;
                 *list = n;
@@ -59,7 +59,7 @@ void addlast(Node **list, long value, char *words, int *length, long *total, cha
 		Update the list with a node at position pos with the following information.
 */
 void add(Node **list, long value, char *words, int pos, int *length, long *total){
-	// Condtion for an out of bounds position.
+	// Condition for an out of bounds position.
 	if (pos > *length || pos < 0){
 		printf("\nPosition is out of bounds\n");
 		printf("\nFailed to add transaction\n");

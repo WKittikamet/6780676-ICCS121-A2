@@ -50,7 +50,7 @@ int main(){
 		FILE *log = fopen("../logs/transaction_log.txt", "r");
 		// Check if transaction_log.txt exists in the logs folder
 		if (log != NULL){
-			// conf is used to store the user inputed line
+			// conf is used to store the user inputted line
 			while (fgets(conf, sizeof(conf), log) != NULL) {
 				int p = sscanf(conf, "%s\t%ld\t%s", desc, &amnt, status);
 				// If the transaction_log.txt has an entry that does not follow our saving pattern, then we exit the program
@@ -81,7 +81,7 @@ int main(){
                 int wscount=0; // wscount is our counter for whitespace in the user input
                 char cmnd[10]; // cmnd will represent the first argument given in the user input
                 char cmnd2[10]; // cmnd2 will represent the second argument given in the user input
-                int pos; // pos will hold the user inputed position
+                int pos; // pos will hold the user inputted position
 		int p; // p will be used for sscanf and tell us how many arguments in the user input match the specified pattern
 		printf("\nCurrent total: %ld\n", *total);
 		if (*total >= (long)0){
@@ -99,7 +99,7 @@ int main(){
 			if (strcmp(conf, "quit") == 0) {
                                 break;
                         }
-			// Counting the whitespace between arguments helps indicate what command the user inputed
+			// Counting the whitespace between arguments helps indicate what command the user inputted
                         for(int i = 0; i < strlen(conf); i++){
                                 if (conf[i] == ' '){ wscount++; }
                                 if (wscount == 4){ break; }
@@ -110,7 +110,7 @@ int main(){
                                 case 4:
                                         p = sscanf(conf, "%s %s %ld %s %d", cmnd, cmnd2, &amnt, desc, &pos);
 					if (p == 5 && strcmp(cmnd, "add") == 0){
-						// Negative numbers are not allowed to be inputed as a transaction
+						// Negative numbers are not allowed to be inputted as a transaction
 						if (amnt < (long)0){
 							printf("\nInvalid transaction amount\n");
 						}
