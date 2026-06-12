@@ -105,10 +105,10 @@ void add(Node **list, long value, char *words, int pos, int *length, long *total
         }
 
 	if (value >= (long)0){
-                printf("Income added at position %d.", pos);
+                printf("Income added at position %d.", pos+1);
         }
         else {
-                printf("Expense added at position %d.", pos);
+                printf("Expense added at position %d.", pos+1);
         }
         // Update the total number of currency after transactions and the length of the list.
         *total += value;
@@ -152,7 +152,7 @@ void dlt(Node **list, int pos, int *length, long *total){
 	current->status = (char*)malloc(strlen("--- d") + 1);
 	strcpy(current->status, "--- d");
 	*total -= current->amnt;
-	printf("Transaction at position %d marked for deletion.", pos);
+	printf("Transaction at position %d marked for deletion.", pos+1);
 	return;
 }
 
