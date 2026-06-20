@@ -1,1 +1,5 @@
-
+Allowance	300	(saved)
+Gift	170	(saved)
+Renovation	-500	(saved)
+Borrowed	150	(saved)
+Lunch	-45	(saved)
