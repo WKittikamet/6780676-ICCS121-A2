@@ -29,7 +29,7 @@ logs/transaction_log.txt:
 .PHONY: clean dist
 
 dist:
-	zip -r fintrack.zip src/ include/ logs/ report/ release/ Makefile
+	zip -r fintrack.zip src/ include/ logs/transaction_log.txt report/ Makefile
 	mv fintrack.zip dist
 
 clean:
