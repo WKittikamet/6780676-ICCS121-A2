@@ -1,5 +1,1 @@
-Allowance	300	(saved)
-Gift	100	(saved)
-Lunch	-45	(saved)
-Bill	-70	(saved)
-Dinner	-90	(saved)
+
