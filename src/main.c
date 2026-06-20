@@ -50,21 +50,28 @@ int main(){
 		FILE *log = fopen("../logs/transaction_log.txt", "r");
 		// Check if transaction_log.txt exists in the logs folder
 		if (log != NULL){
+			int empt_check = 0; // int value that will increment by one every loop. If this and num of arguments is 0, transaction_log.txt
 			// conf is used to store the user inputted line
 			while (fgets(conf, sizeof(conf), log) != NULL) {
 				int p = sscanf(conf, "%s\t%ld\t%s", desc, &amnt, status);
+				// Check if transaction_log.txt is empty by looking at the first line.
+				if (empt_check == 0 && p != 3){
+					printf("No previous session detected. Initiating new session.\n");
+					break;
+				}
 				// If the transaction_log.txt has an entry that does not follow our saving pattern, then we exit the program
 				// Saving pattern: desc[tab space]amnt[tab space]status
-				if (p != 3){
-					printf("Previous session is corrupted");
+				else if (p != 3){
+					printf("Previous session is corrupted.\n");
 					clear_memory(&list);
 					return 1;
 				}
 				status[strcspn(status, "\n")] = '\0';
 				addlast(&list, amnt, desc, length, total, status);
 				printf("\n");
+				empt_check++;
 			}
-			printf("\nLast session loaded.\n");
+			printf("\nLoading completed.\n");
 			fclose(log);
 		}
 		else {
